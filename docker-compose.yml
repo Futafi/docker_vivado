@@ -2,8 +2,8 @@ version: "3"
 services:
   vivado:
     build: .
-    image: "vivado_sds_2019.1:18.04"
-    container_name: "vivado"
+    image: ${IMAGE_NAME}
+    container_name: ${CONTAINER}
     privileged: true
     network_mode: "host"
     # user: '$(id -u):$(id -g)'
@@ -11,8 +11,13 @@ services:
     environment:
       - DISPLAY=${DISPLAY}
       - XAUTHORITY=${XAUTHORITY}
-      - USERID=${UID}
+      - USERID=${USERID}
+      - GROUPID=${GROUPID}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:${XAUTHORITY}
-      - ${PWD}:/project
+      - ${PROJECTDIR}:/project
+    args:
+      - VIVADO_VERSION=${VIVADO_VERSION}
+      - VIVADO_SETUP=${VIVADO_SETUP}
+      - DOCKERHOST_IP=${DOCKERHOST_IP}

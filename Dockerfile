@@ -70,13 +70,13 @@ ADD files/install_config.txt /tmp/install_config.txt
 
 #Run setup
 RUN mkdir -p /tmp && \
-    wget http://$DOCKERHOST_IP:8000/files/$VIVADO_SETUP -O /tmp/xilinx_vivado.tar.gz -c \
+    wget http://$DOCKERHOST_IP:8000/files/$VIVADO_SETUP -O /tmp/xilinx_vivado.tar.gz -nv -c \
     --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 && \
-	mkdir -p /tmp/vivado && \
-	tar xzf /tmp/xilinx_vivado.tar.gz --strip 1 -C /tmp/vivado && \
-	rm /tmp/xilinx_vivado.tar.gz && \
-	/tmp/vivado/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config /tmp/install_config.txt && \
-	rm -rf /tmp/vivado
+    mkdir -p /tmp/vivado && \
+    tar xzf /tmp/xilinx_vivado.tar.gz --strip 1 -C /tmp/vivado && \
+    rm /tmp/xilinx_vivado.tar.gz && \
+    /tmp/vivado/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config /tmp/install_config.txt && \
+    rm -rf /tmp/vivado
 
 #Source settings in .bashrc of build-user
 RUN echo "source /tools/Xilinx/Vivado/$VIVADO_VERSION/settings64.sh" >> /home/build/.bashrc

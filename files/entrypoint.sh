@@ -17,17 +17,23 @@ USER=${USER:=build}
 PASSWORD=${PASSWORD:=build}
 EMAIL=${EMAIL:=build@example.com}
 USERID=${USERID:=1000}
+GROUPID=${GROUPID:=1000}
 ROOT=${ROOT:=FALSE}
 
 #check if the user doesn't exist
 if ! id -u $USER > /dev/null 2>&1; then
 	## Things get messy if we have more than one user.
+	if [ "$GROUPID" -ne 1000 ]
+    then
+    echo "creating new GROUP with GID $GROUPID"
+    groupadd -g $GROUPID $USER
+	fi
 	## (Docker cares only about uid, not username; diff users with same uid = confusion)
 	if [ "$USERID" -ne 1000 ]
 	## Configure user with a different USERID if requested.
 		then
 			echo "creating new $USER with UID $USERID"
-			useradd -m $USER -u $USERID
+			useradd -m $USER -u $USERID -g $GROUPID
 			mkdir /home/$USER
 			chown -R $USER /home/$USER
 	else
