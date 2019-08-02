@@ -1,10 +1,9 @@
-FROM ubuntu:16.04
-MAINTAINER Andreas Galauner <andreas@galauner.de>
+FROM ubuntu:18.04
 
 #Dockerfile variable definitions
-ARG VIVADO_VERSION=2018.2
-ARG VIVADO_SETUP=Xilinx_Vivado_SDK_2018.2_0614_1954.tar.gz
-ARG VIVADO_SETUP_CONFIG=install_config_$VIVADO_VERSION.txt
+ARG VIVADO_VERSION=2019.1
+ARG VIVADO_SETUP=Xilinx_Vivado_SDK_2019.1_0524_1430.tar.gz
+ARG VIVADO_SETUP_CONFIG=install_config.txt
 ARG DOCKERHOST_IP=172.17.0.1
 
 #Set debian frontend to noninteractive
@@ -67,7 +66,7 @@ WORKDIR /project
 #./xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config install_config.txt
 
 #Add batch installation config
-ADD files/$VIVADO_SETUP_CONFIG /tmp/install_config.txt
+ADD files/install_config.txt /tmp/install_config.txt
 
 #Run setup
 RUN mkdir -p /tmp && \
@@ -80,19 +79,10 @@ RUN mkdir -p /tmp && \
 	rm -rf /tmp/vivado
 
 #Source settings in .bashrc of build-user
-RUN echo "source /opt/Xilinx/Vivado/$VIVADO_VERSION/settings64.sh" >> /home/build/.bashrc
-
-#Add license
-RUN mkdir -p /home/build/.Xilinx
-ADD files/Xilinx.lic /home/build/.Xilinx/Xilinx.lic
-RUN chown -R build:build /home/build/.Xilinx
-
-#Fix gcc in Vivado_HLS
-#FIXME: doesn't work in 2017.3 anymore. Not necessary anymore?
-#RUN cp /usr/lib/x86_64-linux-gnu/crt?.o /opt/Xilinx/Vivado_HLS/$VIVADO_VERSION/lnx64/tools/gcc/lib/gcc/x86_64-unknown-linux-gnu/*/
+RUN echo "source /tools/Xilinx/Vivado/$VIVADO_VERSION/settings64.sh" >> /home/build/.bashrc
 
 #Fix Vivado SDK in headless mode
-RUN sed -i -e "s:xlsclients  > /dev/null 2>\&1:/usr/bin/xlsclients  > /dev/null 2>\&1:g" /opt/Xilinx/SDK/$VIVADO_VERSION/bin/xsct
+RUN sed -i -e "s:xlsclients  > /dev/null 2>\&1:/usr/bin/xlsclients  > /dev/null 2>\&1:g" /tools/Xilinx/SDK/$VIVADO_VERSION/bin/xsct
 
 #entrypoint script
 ADD files/entrypoint.sh /bin/entrypoint.sh

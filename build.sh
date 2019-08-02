@@ -4,11 +4,6 @@ cd $(dirname $0)
 
 source ./config
 
-if [ ! -f files/Xilinx.lic ]; then
-    echo "Xilinx.lic license file not found. Cannot continue."
-    exit 1
-fi
-
 if [ ! -f files/$VIVADO_SETUP ]; then
     echo "Xilinx Vivado installation .tar.gz file not found. Cannot continue."
     exit 1
