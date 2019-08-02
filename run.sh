@@ -5,7 +5,6 @@ cd $(dirname $0)
 
 source ./config
 
-echo $USER
 if docker inspect $CONTAINER >/dev/null 2>&1; then
     echo -e "\nINFO: Reattaching to running container $CONTAINER\n"
     docker start -i $CONTAINER
