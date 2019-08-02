@@ -1,9 +1,14 @@
 version: "3"
 services:
   vivado:
-    build: .
-    image: ${IMAGE_NAME}
-    container_name: ${CONTAINER}
+    build:
+      context: .
+      args:
+        - VIVADO_VERSION=${VIVADO_VERSION}
+        - VIVADO_SETUP=${VIVADO_SETUP}
+        - DOCKERHOST_IP=${DOCKERHOST_IP}
+    image: "futafi/vivado:${VIVADO_VERSION}"
+    container_name: vivado
     privileged: true
     network_mode: "host"
     # user: '$(id -u):$(id -g)'
@@ -17,7 +22,3 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:${XAUTHORITY}
       - ${PROJECTDIR}:/project
-    args:
-      - VIVADO_VERSION=${VIVADO_VERSION}
-      - VIVADO_SETUP=${VIVADO_SETUP}
-      - DOCKERHOST_IP=${DOCKERHOST_IP}
