@@ -1,0 +1,18 @@
+version: "3"
+services:
+  vivado:
+    build: .
+    image: "vivado_sds_2019.1:18.04"
+    container_name: "vivado"
+    privileged: true
+    network_mode: "host"
+    # user: '$(id -u):$(id -g)'
+    # user: "${UID}:${GID}"
+    environment:
+      - DISPLAY=${DISPLAY}
+      - XAUTHORITY=${XAUTHORITY}
+      - USERID=${UID}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY}:${XAUTHORITY}
+      - ${PWD}:/project

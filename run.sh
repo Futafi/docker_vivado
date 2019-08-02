@@ -5,6 +5,7 @@ cd $(dirname $0)
 
 source ./config
 
+echo $USER
 if docker inspect $CONTAINER >/dev/null 2>&1; then
     echo -e "\nINFO: Reattaching to running container $CONTAINER\n"
     docker start -i $CONTAINER
@@ -18,7 +19,6 @@ else
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		--privileged \
 		-v /dev/bus/usb:/dev/bus/usb \
-		--mac-address="02:42:ac:11:00:03" \
 		$IMAGE_NAME
 fi
 
