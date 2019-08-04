@@ -23,7 +23,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get install -y git vim curl locales
 
 #Install Yocto dependencies
-RUN apt-get install -y gawk wget git-core diffstat unzip texinfo gcc-multilib \
+RUN apt-get install -y gawk git-core diffstat unzip texinfo gcc-multilib \
 	build-essential chrpath libsdl1.2-dev xterm python3 cpio inetutils-ping 
 RUN apt-get install -y parted dosfstools mtools syslinux lsb-release
 
@@ -69,13 +69,11 @@ WORKDIR /project
 ADD files/install_config.txt /tmp/install_config.txt
 
 #Run setup
-RUN mkdir -p /tmp && \
-    wget http://$DOCKERHOST_IP:8000/files/$VIVADO_SETUP -O /tmp/xilinx_vivado.tar.gz -nv -c \
-    --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 0 && \
-    mkdir -p /tmp/vivado && \
-    tar xzf /tmp/xilinx_vivado.tar.gz --strip 1 -C /tmp/vivado && \
-    rm /tmp/xilinx_vivado.tar.gz && \
-    /tmp/vivado/xsetup --agree XilinxEULA,3rdPartyEULA,WebTalkTerms --batch Install --config /tmp/install_config.txt && \
+RUN mkdir -p /tmp/vivado && \
+    curl http://$DOCKERHOST_IP:8000/files/$VIVADO_SETUP | \
+    tar zx --strip-components=1 -C /tmp/vivado && \
+    /tmp/vivado/xsetup --agree 3rdPartyEULA,WebTalkTerms,XilinxEULA \
+    --batch Install --config /tmp/install_config.txt && \
     rm -rf /tmp/vivado
 
 #Source settings in .bashrc of build-user
